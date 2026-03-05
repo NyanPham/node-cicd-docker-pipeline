@@ -1,0 +1,26 @@
+name: Continuous Deployment (Docker)
+
+on: 
+    push: 
+        branches: ["main"]
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Pull code to the VM
+          uses: actions/checkout@v4
+        
+        - name: Sign in Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{secrets.DOCKERHUB_TOKEN}}
+        
+        - name: Build and push Docker Image 
+          uses: docker/build-push-action@v5
+          with:
+            context: .
+            push: true
+            tags: nyanpham/code-cicd-docker-pipeline:latest
